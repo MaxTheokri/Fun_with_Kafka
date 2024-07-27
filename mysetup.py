@@ -1,6 +1,6 @@
 import yaml
-import mysql.connector
-from sqlalchemy import create_engine, URL
+# import mysql.connector
+from sqlalchemy import create_engine, URL, text
 
 print('Initializing variables')
 with open('docker-compose.yaml', 'r') as creds_file:
@@ -28,16 +28,24 @@ try:
         "mysql+pymysql",
         username="root",
         password="set-your-password",  # plain (unescaped) text
-        host="mysql",
+        host="localhost:3306",
         database="atm-db",
     )
+    print(url_object)
+
     engine = create_engine(url_object)
-    #connection = mysql.connector.connect(host="mysql://atm-db", database="atm-db", user=db_user, password=db_pw)
+    # connection = mysql.connector.connect(host="localhost:3306", database="atm-db", user=db_user, password=db_pw)
     print("Connected to database")
 except Exception as e:
     print("Error: ", e)
     exit()
 
+
+with engine.connect() as connection:
+    result = connection.execute(text(transaction_table))
+    result2 = connection.execute(text("SELECT * FROM ATM.TRANSACTIONS"))
+    print(result2)
+'''
 cursor = connection.cursor()
 print("Creating table")
 result = cursor.execute(transaction_table)
@@ -46,3 +54,4 @@ print(result)
 print("selecting table")
 result2 = cursor.execute("SELECT * FROM ATM.TRANSACTIONS")
 print(result2)
+'''
