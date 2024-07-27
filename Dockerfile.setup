@@ -1,0 +1,16 @@
+FROM python:3.10.14-bookworm
+
+# Prevents the pesky pyc files - not needed if no modules
+# ENV PYTHONDONTWRITEBYTECODE=1
+
+ENV TZ="Amercia/New_York"
+
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+
+WORKDIR /app
+COPY mysetup.py /app/mysetup.py
+COPY docker-compose.yaml /app/docker-compose.yaml
+
+
+CMD ["python", "/app/mysetup.py"]
